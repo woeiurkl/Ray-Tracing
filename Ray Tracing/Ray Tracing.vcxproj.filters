@@ -73,4 +73,9 @@
     <FxCompile Include="PS.hlsl" />
     <FxCompile Include="VS.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\3_v10-221110-150951\03_Raytracing_Step13_Transparency\shadertoy_abstract1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

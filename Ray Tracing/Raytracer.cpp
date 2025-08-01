@@ -9,6 +9,7 @@
 Raytracer::Raytracer(const int& width, const int& height)
 	: width(width), height(height)
 {
+	// Red Ball
 	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, -0.1f, 1.5f), 1.0f);
 	sphere1->amb = glm::vec3(0.1f);
 	sphere1->dif = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -18,6 +19,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	sphere1->transparency = 0.0f;
 	objects.push_back(sphere1);
 
+	// Blue Ball
 	auto sphere2 = std::make_shared<Sphere>(glm::vec3(1.2f, -0.1f, 0.5f), 0.4f);
 	sphere2->amb = glm::vec3(0.0f);
 	sphere2->dif = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -26,6 +28,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	sphere2->reflection = 0.3f;
 	objects.push_back(sphere2);
 
+	// Ground
 	auto groundTexture = std::make_shared<Texture>("shadertoy_abstract1.jpg");
 	auto ground = std::make_shared<Square>(glm::vec3(-10.0f, -1.2f, 0.0f), glm::vec3(-10.0f, -1.2f, 10.0f), glm::vec3(10.0f, -1.2f, 10.0f), glm::vec3(10.0f, -1.2f, 0.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
@@ -83,8 +86,8 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 		const glm::vec3 dirToLight = glm::normalize(light.pos - hit.point);
 
 		// 그림자 생략
-		// Ray shadowRay = { hit.point + dirToLight * 1e-4f, dirToLight };
-		// if (FindClosestCollision(shadowRay).d < 0.0f)
+		//Ray shadowRay = { hit.point + dirToLight * 1e-4f, dirToLight };
+		//if (FindClosestCollision(shadowRay).d < 0.0f)
 		{
 			glm::vec3 phongColor(0.0f);
 

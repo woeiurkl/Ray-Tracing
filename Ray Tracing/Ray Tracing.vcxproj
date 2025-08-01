@@ -150,6 +150,9 @@
     </FxCompile>
     <FxCompile Include="VS.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\3_v10-221110-150951\03_Raytracing_Step13_Transparency\shadertoy_abstract1.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
