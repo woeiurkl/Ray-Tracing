@@ -10,7 +10,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	: width(width), height(height)
 {
 	// Red Ball
-	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, -0.1f, 1.5f), 1.0f);
+	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.5f), 1.0f); // y = -0.1f
 	sphere1->amb = glm::vec3(0.1f);
 	sphere1->dif = glm::vec3(1.0f, 0.0f, 0.0f);
 	sphere1->spec = glm::vec3(1.0f);
@@ -19,14 +19,25 @@ Raytracer::Raytracer(const int& width, const int& height)
 	sphere1->transparency = 0.0f;
 	objects.push_back(sphere1);
 
-	// Blue Ball
-	auto sphere2 = std::make_shared<Sphere>(glm::vec3(1.2f, -0.1f, 0.5f), 0.4f);
-	sphere2->amb = glm::vec3(0.0f);
-	sphere2->dif = glm::vec3(0.0f, 0.0f, 1.0f);
-	sphere2->spec = glm::vec3(1.0f);
-	sphere2->alpha = 50.0f;
-	sphere2->reflection = 0.3f;
+	// Metal Ball
+	auto sphere2 = std::make_shared<Sphere>(glm::vec3(2.5f, 0.0f, 1.5f), 1.0f);
+	sphere2->amb = glm::vec3(0.19f);
+	sphere2->dif = glm::vec3(0.51f, 0.51f, 0.51f);
+	sphere2->spec = glm::vec3(0.97f);
+	sphere2->alpha = 300.0f;
+	sphere2->reflection = 0.8f;
+	sphere2->transparency = 0.0f;
 	objects.push_back(sphere2);
+
+	// Glass Ball
+	auto sphere3 = std::make_shared<Sphere>(glm::vec3(-2.5f, 0.0f, 1.5f), 1.0f);
+	sphere3->amb = glm::vec3(0.2f);
+	sphere3->dif = glm::vec3(0.0f, 0.0f, 1.0f);
+	sphere3->spec = glm::vec3(0.0f);
+	sphere3->alpha = 50.0f;
+	sphere3->reflection = 0.0f;
+	sphere3->transparency = 1.0f;
+	objects.push_back(sphere3);
 
 	// Ground
 	auto groundTexture = std::make_shared<Texture>("shadertoy_abstract1.jpg");
@@ -81,11 +92,11 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 	if (hit.d >= 0.0f)
 	{
-		glm::vec3 color(0.0f);
+		glm::vec3 color(0.0f);  // 0.0f
 
 		const glm::vec3 dirToLight = glm::normalize(light.pos - hit.point);
 
-		// 그림자 생략
+		// 그림자
 		//Ray shadowRay = { hit.point + dirToLight * 1e-4f, dirToLight };
 		//if (FindClosestCollision(shadowRay).d < 0.0f)
 		{
@@ -133,6 +144,35 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 			if (hit.obj->transparency)
 			{
 				// 투명한 물체의 굴절 처리
+				const float ior = 1.5f; // Index of refraction (유리: 1.5, 물: 1.3)
+
+				float eta; // sinTheta1 / sinTheta2
+				glm::vec3 normal;
+
+				if (glm::dot(ray.dir, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
+				{
+					eta = ior;
+					normal = hit.normal;
+				}
+				else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
+				{
+					eta = 1.0f / ior;
+					normal = -hit.normal;
+				}
+
+				const float costheta1 = glm::dot(normal, -ray.dir);
+				const float sintheta1 = glm::sqrt(1.0f - costheta1 * costheta1); // cos^2 + sin^2 = 1
+				const float sintheta2 = sintheta1 / eta;
+				const float costheta2 = glm::sqrt(1.0f - sintheta2 * sintheta2);
+
+				const glm::vec3 m = glm::normalize(dot(normal, -ray.dir) * normal + ray.dir);
+				const glm::vec3 a = m * sintheta2;
+				const glm::vec3 b = -normal * costheta2;
+				const glm::vec3 refracteddirection = glm::normalize(a + b); // transmission
+
+				Ray refractedRay{ hit.point + refracteddirection * 0.0001f, refracteddirection };
+
+				color += traceRay(refractedRay, recurseLevel - 1) * hit.obj->transparency;
 			}
 		}
 
