@@ -10,7 +10,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	: width(width), height(height)
 {
 	// Red Ball
-	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, -0.1f, 1.5f), 1.0f); // y = -0.1f z = 1.5f
+	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 2.0f), 0.8f); // y = -0.1f z = 1.5f
 	sphere1->amb = glm::vec3(0.1f);
 	sphere1->dif = glm::vec3(1.0f, 0.0f, 0.0f);
 	sphere1->spec = glm::vec3(1.0f);
@@ -20,7 +20,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere1);
 
 	// Metal Ball
-	auto sphere2 = std::make_shared<Sphere>(glm::vec3(2.5f, 0.0f, 1.5f), 1.0f);
+	auto sphere2 = std::make_shared<Sphere>(glm::vec3(2.5f, 0.0f, 2.0f), 0.8f);
 	sphere2->amb = glm::vec3(0.19f);
 	sphere2->dif = glm::vec3(0.51f, 0.51f, 0.51f);
 	sphere2->spec = glm::vec3(0.97f);
@@ -30,7 +30,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere2);
 
 	// Glass Ball
-	auto sphere3 = std::make_shared<Sphere>(glm::vec3(-2.5f, 0.0f, 1.5f), 1.0f);
+	auto sphere3 = std::make_shared<Sphere>(glm::vec3(-2.5f, 0.0f, 2.0f), 0.8f);
 	sphere3->amb = glm::vec3(0.2f);
 	sphere3->dif = glm::vec3(0.0f, 0.0f, 1.0f);
 	sphere3->spec = glm::vec3(0.0f);
@@ -40,7 +40,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere3);
 
 	// Ground
-	auto groundTexture = std::make_shared<Texture>("shadertoy_abstract1.jpg");
+	/*auto groundTexture = std::make_shared<Texture>("nx.jpg");
 	auto ground = std::make_shared<Square>(glm::vec3(-10.0f, -1.2f, 0.0f), glm::vec3(-10.0f, -1.2f, 10.0f), glm::vec3(10.0f, -1.2f, 10.0f), glm::vec3(10.0f, -1.2f, 0.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	ground->amb = glm::vec4(1.0f);
@@ -50,10 +50,87 @@ Raytracer::Raytracer(const int& width, const int& height)
 	ground->reflection = 0.0f;
 	ground->ambTexture = groundTexture;
 	ground->difTexture = groundTexture;
+	objects.push_back(ground);*/
 
-	objects.push_back(ground);
+	// right cube
+	auto pxTexture = std::make_shared<Texture>("px.jpg");
+	auto px = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 10.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	px->amb = glm::vec4(1.0f);
+	px->dif = glm::vec4(1.0f);
+	px->spec = glm::vec4(1.0f);
+	px->alpha = 10.0f;
+	px->reflection = 0.0f;
+	px->ambTexture = pxTexture;
+	px->difTexture = pxTexture;
+	objects.push_back(px);
 
-	light = Light{ {0.0f, 5.0f, -3.0f} }; // 화면 뒷쪽  {0.0f, 0.5f, -0.5f}
+	// left cube
+	auto nxTexture = std::make_shared<Texture>("nx.jpg");
+	auto nx = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	nx->amb = glm::vec4(1.0f);
+	nx->dif = glm::vec4(1.0f);
+	nx->spec = glm::vec4(1.0f);
+	nx->alpha = 10.0f;
+	nx->reflection = 0.0f;
+	nx->ambTexture = nxTexture;
+	nx->difTexture = nxTexture;
+	objects.push_back(nx);
+
+	// up cube
+	auto pyTexture = std::make_shared<Texture>("py.jpg");
+	auto py = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, 9.0f, 10.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	py->amb = glm::vec4(1.0f);
+	py->dif = glm::vec4(1.0f);
+	py->spec = glm::vec4(1.0f);
+	py->alpha = 10.0f;
+	py->reflection = 0.0f;
+	py->ambTexture = pyTexture;
+	py->difTexture = pyTexture;
+	objects.push_back(py);
+
+	// down cube
+	auto nyTexture = std::make_shared<Texture>("ny.jpg");
+	auto ny = std::make_shared<Square>(glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	ny->amb = glm::vec4(1.0f);
+	ny->dif = glm::vec4(1.0f);
+	ny->spec = glm::vec4(1.0f);
+	ny->alpha = 10.0f;
+	ny->reflection = 0.0f;
+	ny->ambTexture = nyTexture;
+	ny->difTexture = nyTexture;
+	objects.push_back(ny);
+
+	// front cube
+	auto pzTexture = std::make_shared<Texture>("pz.jpg");
+	auto pz = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	pz->amb = glm::vec4(1.0f);
+	pz->dif = glm::vec4(1.0f);
+	pz->spec = glm::vec4(1.0f);
+	pz->alpha = 10.0f;
+	pz->reflection = 0.0f;
+	pz->ambTexture = pzTexture;
+	pz->difTexture = pzTexture;
+	objects.push_back(pz);
+
+	// back cube
+	auto nzTexture = std::make_shared<Texture>("nz.jpg");
+	auto nz = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	nz->amb = glm::vec4(1.0f);
+	nz->dif = glm::vec4(1.0f);
+	nz->spec = glm::vec4(1.0f);
+	nz->alpha = 10.0f;
+	nz->reflection = 0.0f;
+	nz->ambTexture = nzTexture;
+	nz->difTexture = nzTexture;
+	objects.push_back(nz);
+
+	light = Light{ {0.0f, 4.0f, -1.0f} }; // 화면 뒷쪽  {0.0f, 0.5f, -0.5f}
 }
 
 Hit Raytracer::FindClosestCollision(Ray& ray)
@@ -242,14 +319,14 @@ void Raytracer::Render(std::vector<glm::vec4>& pixels)
 {
 	std::fill(pixels.begin(), pixels.end(), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	const glm::vec3 eyePos(0.0f, 0.0f, -1.5f);
+	const glm::vec3 eyePos(0.0f, 0.0f, -1.5f); // eyePos(0.0f, 0.0f, -1.5f);
 
 #pragma omp parallel for
 	for (int j = 0; j < height; j++)
 		for (int i = 0; i < width; i++)
 		{
 			const glm::vec3 pixelPosWorld = TransformScreenToWorld(glm::vec2(i, j));
-			Ray pixelRay{ pixelPosWorld, glm::normalize(pixelPosWorld - eyePos) };
+			Ray pixelRay{ pixelPosWorld, glm::normalize(pixelPosWorld - eyePos) };   
 			pixels[i + width * j] = glm::vec4(glm::clamp(traceRay(pixelRay, 5), 0.0f, 1.0f), 1.0f);
 		}
 }

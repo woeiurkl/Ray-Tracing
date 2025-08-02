@@ -78,21 +78,23 @@ int main()
 		}
 		else
 		{
-			// Start the Dear ImGui frame
-			// ImGui_ImplDX11_NewFrame();
-			// ImGui_ImplWin32_NewFrame();
-			// ImGui::NewFrame();
-			// ImGui::Begin("Scene Control");
-			// ImGui::End();
-			// ImGui::Render();
+			//Start the Dear ImGui frame
+			/*ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+			ImGui::Begin("Scene Control");
+			ImGui::SliderFloat3("Light Position", &example->raytracer.light.pos.x, -10.0f, 20.0f);
 
-			example->Update();
-			example->Render();
+			ImGui::End();
+			ImGui::Render();*/
 
-			// ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			example->Update(); // need
+			example->Render(); // need
+
+			//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 			// switch the back buffer and the front buffer
-			example->swapChain->Present(1, 0);
+			example->swapChain->Present(1, 0); // need
 		}
 	}
 

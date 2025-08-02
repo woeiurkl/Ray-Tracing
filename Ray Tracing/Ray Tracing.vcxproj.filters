@@ -74,7 +74,22 @@
     <FxCompile Include="VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\3_v10-221110-150951\03_Raytracing_Step13_Transparency\shadertoy_abstract1.jpg">
+    <Image Include="..\..\New folder\ny.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\New folder\nz.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\New folder\px.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\New folder\py.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\New folder\pz.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\New folder\nx.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
