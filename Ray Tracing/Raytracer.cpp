@@ -15,12 +15,12 @@ Raytracer::Raytracer(const int& width, const int& height)
 	sphere1->dif = glm::vec3(1.0f, 0.0f, 0.0f);
 	sphere1->spec = glm::vec3(1.0f);
 	sphere1->alpha = 10.0f;
-	sphere1->reflection = 0.0f;
+	sphere1->reflection = 0.05f;
 	sphere1->transparency = 0.0f;
 	objects.push_back(sphere1);
 
 	// Metal Ball
-	auto sphere2 = std::make_shared<Sphere>(glm::vec3(2.5f, 0.0f, 2.0f), 0.8f);
+	auto sphere2 = std::make_shared<Sphere>(glm::vec3(-2.5f, 0.0f, 2.0f), 0.8f);
 	sphere2->amb = glm::vec3(0.19f);
 	sphere2->dif = glm::vec3(0.51f, 0.51f, 0.51f);
 	sphere2->spec = glm::vec3(0.97f);
@@ -30,13 +30,13 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere2);
 
 	// Glass Ball
-	auto sphere3 = std::make_shared<Sphere>(glm::vec3(-2.5f, 0.0f, 2.0f), 0.8f);
-	sphere3->amb = glm::vec3(0.2f);
-	sphere3->dif = glm::vec3(0.0f, 0.0f, 1.0f);
-	sphere3->spec = glm::vec3(0.0f);
-	sphere3->alpha = 50.0f;
-	sphere3->reflection = 0.0f;
-	sphere3->transparency = 1.0f;
+	auto sphere3 = std::make_shared<Sphere>(glm::vec3(2.5f, 0.0f, 2.0f), 0.8f);
+	sphere3->amb = glm::vec3(0.1f);
+	sphere3->dif = glm::vec3(0.0f);
+	sphere3->spec = glm::vec3(0.9f);
+	sphere3->alpha = 500.0f;
+	sphere3->reflection = 0.1f;
+	sphere3->transparency = 0.9f;
 	objects.push_back(sphere3);
 
 	// Ground
@@ -52,9 +52,88 @@ Raytracer::Raytracer(const int& width, const int& height)
 	ground->difTexture = groundTexture;
 	objects.push_back(ground);*/
 
+	//// right cube
+	//auto pxTexture = std::make_shared<Texture>("px.jpg");
+	//auto px = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 10.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//px->amb = glm::vec4(1.0f);
+	//px->dif = glm::vec4(1.0f);
+	//px->spec = glm::vec4(1.0f);
+	//px->alpha = 10.0f;
+	//px->reflection = 0.0f;
+	//px->ambTexture = pxTexture;
+	//px->difTexture = pxTexture;
+	//objects.push_back(px);
+
+	//// left cube
+	//auto nxTexture = std::make_shared<Texture>("nx.jpg");
+	//auto nx = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//nx->amb = glm::vec4(1.0f);
+	//nx->dif = glm::vec4(1.0f);
+	//nx->spec = glm::vec4(1.0f);
+	//nx->alpha = 10.0f;
+	//nx->reflection = 0.0f;
+	//nx->ambTexture = nxTexture;
+	//nx->difTexture = nxTexture;
+	//objects.push_back(nx);
+
+	//// up cube
+	//auto pyTexture = std::make_shared<Texture>("py.jpg");
+	//auto py = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, 9.0f, 10.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//py->amb = glm::vec4(1.0f);
+	//py->dif = glm::vec4(1.0f);
+	//py->spec = glm::vec4(1.0f);
+	//py->alpha = 10.0f;
+	//py->reflection = 0.0f;
+	//py->ambTexture = pyTexture;
+	//py->difTexture = pyTexture;
+	//objects.push_back(py);
+
+	//// down cube   
+	//auto nyTexture = std::make_shared<Texture>("ny.jpg");
+	//auto ny = std::make_shared<Square>(glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//ny->amb = glm::vec4(1.0f);
+	//ny->dif = glm::vec4(1.0f);
+	//ny->spec = glm::vec4(1.0f);
+	//ny->alpha = 10.0f;
+	//ny->reflection = 0.0f;
+	//ny->ambTexture = nyTexture;
+	//ny->difTexture = nyTexture;
+	//objects.push_back(ny);
+
+	//// front cube
+	//auto pzTexture = std::make_shared<Texture>("pz.jpg");
+	//auto pz = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//pz->amb = glm::vec4(1.0f);
+	//pz->dif = glm::vec4(1.0f);
+	//pz->spec = glm::vec4(1.0f);
+	//pz->alpha = 10.0f;
+	//pz->reflection = 0.0f;
+	//pz->ambTexture = pzTexture;
+	//pz->difTexture = pzTexture;
+	//objects.push_back(pz);
+
+	//// back cube
+	//auto nzTexture = std::make_shared<Texture>("nz.jpg");
+	//auto nz = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f),
+	//	glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
+	//nz->amb = glm::vec4(1.0f);
+	//nz->dif = glm::vec4(1.0f);
+	//nz->spec = glm::vec4(1.0f);
+	//nz->alpha = 10.0f;
+	//nz->reflection = 0.0f;
+	//nz->ambTexture = nzTexture;
+	//nz->difTexture = nzTexture;
+	//objects.push_back(nz);
+
+	// test
 	// right cube
 	auto pxTexture = std::make_shared<Texture>("px.jpg");
-	auto px = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 10.0f),
+	auto px = std::make_shared<Square>(glm::vec3(10.0f, 7.75f, 10.0f), glm::vec3(10.0f, 7.75f, 0.0f), glm::vec3(10.0f, -2.25f, 0.0f), glm::vec3(10.0f, -2.25f, 10.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	px->amb = glm::vec4(1.0f);
 	px->dif = glm::vec4(1.0f);
@@ -67,7 +146,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 
 	// left cube
 	auto nxTexture = std::make_shared<Texture>("nx.jpg");
-	auto nx = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
+	auto nx = std::make_shared<Square>(glm::vec3(-10.0f, 7.75f, 0.0f), glm::vec3(-10.0f, 7.75f, 10.0f), glm::vec3(-10.0f, -2.25f, 10.0f), glm::vec3(-10.0f, -2.25f, 0.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	nx->amb = glm::vec4(1.0f);
 	nx->dif = glm::vec4(1.0f);
@@ -80,7 +159,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 
 	// up cube
 	auto pyTexture = std::make_shared<Texture>("py.jpg");
-	auto py = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(-10.0f, 9.0f, 10.0f),
+	auto py = std::make_shared<Square>(glm::vec3(-10.0f, 7.75f, 0.0f), glm::vec3(10.0f, 7.75f, 0.0f), glm::vec3(10.0f, 7.75f, 10.0f), glm::vec3(-10.0f, 7.75f, 10.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	py->amb = glm::vec4(1.0f);
 	py->dif = glm::vec4(1.0f);
@@ -91,7 +170,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	py->difTexture = pyTexture;
 	objects.push_back(py);
 
-	// down cube
+	// down cube   
 	auto nyTexture = std::make_shared<Texture>("ny.jpg");
 	auto ny = std::make_shared<Square>(glm::vec3(-10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(10.0f, -1.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
@@ -106,7 +185,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 
 	// front cube
 	auto pzTexture = std::make_shared<Texture>("pz.jpg");
-	auto pz = std::make_shared<Square>(glm::vec3(-10.0f, 9.0f, 10.0f), glm::vec3(10.0f, 9.0f, 10.0f), glm::vec3(10.0f, -1.0f, 10.0f), glm::vec3(-10.0f, -1.0f, 10.0f),
+	auto pz = std::make_shared<Square>(glm::vec3(-10.0f, 7.75f, 10.0f), glm::vec3(10.0f, 7.75f, 10.0f), glm::vec3(10.0f, -2.25f, 10.0f), glm::vec3(-10.0f, -2.25f, 10.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	pz->amb = glm::vec4(1.0f);
 	pz->dif = glm::vec4(1.0f);
@@ -119,7 +198,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 
 	// back cube
 	auto nzTexture = std::make_shared<Texture>("nz.jpg");
-	auto nz = std::make_shared<Square>(glm::vec3(10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, 9.0f, 0.0f), glm::vec3(-10.0f, -1.0f, 0.0f), glm::vec3(10.0f, -1.0f, 0.0f),
+	auto nz = std::make_shared<Square>(glm::vec3(10.0f, 7.75f, 0.0f), glm::vec3(-10.0f, 7.75f, 0.0f), glm::vec3(-10.0f, -2.25f, 0.0f), glm::vec3(10.0f, -2.25f, 0.0f),
 		glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
 	nz->amb = glm::vec4(1.0f);
 	nz->dif = glm::vec4(1.0f);
@@ -130,7 +209,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	nz->difTexture = nzTexture;
 	objects.push_back(nz);
 
-	light = Light{ {0.0f, 4.0f, -1.0f} }; // 화면 뒷쪽  {0.0f, 0.5f, -0.5f}
+	light = Light{ {-0.8f, 1.1f, 0.1f}, 0.65f }; // 화면 뒷쪽  {0.0f, 0.5f, -0.5f}   eyePos(0.0f, 0.0f, -1.5f);
 }
 
 Hit Raytracer::FindClosestCollision(Ray& ray)
@@ -175,7 +254,12 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 		// 그림자
 		Ray shadowRay = { hit.point + dirToLight * 0.01f, dirToLight };
-		if (FindClosestCollision(shadowRay).d < 0.0f)
+		auto shadowHit = FindClosestCollision(shadowRay);
+		float distToLight = glm::length(light.pos - hit.point);
+
+		bool inShadow = (shadowHit.d >= 0.0f && shadowHit.d < distToLight);
+
+		if (!inShadow)
 		{
 			glm::vec3 phongColor(0.0f);
 
@@ -185,7 +269,7 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 			if (hit.obj->ambTexture)
 			{
-				phongColor += hit.obj->amb * hit.obj->ambTexture->SampleLinear(hit.uv);
+				phongColor += hit.obj->amb * hit.obj->ambTexture->SampleLinear(hit.uv) * light.intesity;
 			}
 			else
 			{
@@ -194,14 +278,14 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 			if (hit.obj->difTexture)
 			{
-				phongColor += diff * hit.obj->dif * hit.obj->difTexture->SampleLinear(hit.uv);
+				phongColor += diff * hit.obj->dif * hit.obj->difTexture->SampleLinear(hit.uv) * light.intesity;
 			}
 			else
 			{
-				phongColor += diff * hit.obj->dif;
+				phongColor += diff * hit.obj->dif * light.intesity * 1.3f;
 			}
 
-			phongColor += hit.obj->spec * specular;
+			phongColor += hit.obj->spec * specular * light.intesity;
 
 			color += phongColor * (1.0f - hit.obj->reflection - hit.obj->transparency);
 
@@ -255,7 +339,7 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 		{
 			if (hit.obj->ambTexture)
 			{
-				color += hit.obj->amb * hit.obj->ambTexture->SampleLinear(hit.uv);
+				color += hit.obj->amb * hit.obj->ambTexture->SampleLinear(hit.uv) / 1.5f;
 			}
 			else
 			{
