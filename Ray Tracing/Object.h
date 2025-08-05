@@ -19,6 +19,9 @@ public:
     float reflection = 0.0;
     float transparency = 0.0;
 
+    bool fresnel = false;  // fresnel
+    float ior = 1.0f;  // fresnel
+
     std::shared_ptr<Texture> ambTexture;
     std::shared_ptr<Texture> difTexture;
 

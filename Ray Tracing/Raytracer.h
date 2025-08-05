@@ -27,4 +27,6 @@ public:
 	void Render(std::vector<glm::vec4>& pixels);
 
 	glm::vec3 TransformScreenToWorld(glm::vec2 posScreen);
+
+	float calculateFresnel(const glm::vec3& incident, const glm::vec3& normal, float ior);
 };
