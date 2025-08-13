@@ -1,16 +1,10 @@
 ﻿#include "Raytracer.h"
 
-#include "Sphere.h"
-#include "Ray.h"
-#include "Light.h"
-#include "Triangle.h"
-#include "Square.h"
-
 Raytracer::Raytracer(const int& width, const int& height)
 	: width(width), height(height)
 {
 	// Red Ball
-	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, 0.15f, 1.5f), 0.65f); //
+	auto sphere1 = std::make_shared<Sphere>(glm::vec3(0.0f, 0.15f, 1.5f), 0.65f);
 	sphere1->amb = glm::vec3(0.1f);
 	sphere1->dif = glm::vec3(1.0f, 0.0f, 0.0f);
 	sphere1->spec = glm::vec3(1.0f);
@@ -20,7 +14,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere1);
 
 	// Metal Ball
-	auto sphere2 = std::make_shared<Sphere>(glm::vec3(-2.2f, 0.15f, 1.5f), 0.65f);  // 2.6f, -0.1f, 3.0f
+	auto sphere2 = std::make_shared<Sphere>(glm::vec3(-2.2f, 0.15f, 1.5f), 0.65f);
 	sphere2->amb = glm::vec3(0.19f);
 	sphere2->dif = glm::vec3(0.75f, 0.75f, 0.75f);
 	sphere2->spec = glm::vec3(0.77f);
@@ -30,7 +24,7 @@ Raytracer::Raytracer(const int& width, const int& height)
 	objects.push_back(sphere2);
 
 	// Glass Ball
-	auto sphere3 = std::make_shared<Sphere>(glm::vec3(2.2f, 0.15f, 1.5f), 0.65f);  // -2.5f, 0.35f, 2.0f
+	auto sphere3 = std::make_shared<Sphere>(glm::vec3(2.2f, 0.15f, 1.5f), 0.65f);
 	sphere3->amb = glm::vec3(0.1f);
 	sphere3->dif = glm::vec3(0.0f);
 	sphere3->spec = glm::vec3(0.9f);
@@ -53,6 +47,8 @@ Raytracer::Raytracer(const int& width, const int& height)
 	water->fresnel = true;
 	water->ior = 1.33f;
 	objects.push_back(water);
+
+
 
 	// right cube
 	auto pxTexture = std::make_shared<Texture>("px.jpg");
@@ -134,7 +130,14 @@ Raytracer::Raytracer(const int& width, const int& height)
 
 
 
-	light = Light{ {-0.5f, 0.6f, 0.1f}, 0.6f }; // 화면 뒷쪽  {0.0f, 0.5f, -0.5f}   eyePos(0.0f, 0.0f, -1.5f);
+	light = Light{ {-0.5f, 0.6f, 0.1f}, 0.6f };
+
+
+	// DoF
+	defocusAngle = 0.0f;
+	focusDist = 0.0f;
+
+	InitializeCamera();
 }
 
 Hit Raytracer::FindClosestCollision(Ray& ray)
@@ -154,7 +157,6 @@ Hit Raytracer::FindClosestCollision(Ray& ray)
 				closestHit = hit;
 				closestHit.obj = objects[l];
 
-				// 텍스춰 좌표
 				closestHit.uv = hit.uv;
 			}
 		}
@@ -173,11 +175,11 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 	if (hit.d >= 0.0f)
 	{
-		glm::vec3 color(0.0f);  // 0.0f
+		glm::vec3 color(0.0f);
 
 		const glm::vec3 dirToLight = glm::normalize(light.pos - hit.point);
 
-		// 그림자
+		// Shadow
 		Ray shadowRay = { hit.point + dirToLight * 0.01f, dirToLight };
 		auto shadowHit = FindClosestCollision(shadowRay);
 		float distToLight = glm::length(light.pos - hit.point);
@@ -227,12 +229,12 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 				float eta; // sinTheta1 / sinTheta2
 				glm::vec3 normal;
 
-				if (glm::dot(ray.dir, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
+				if (glm::dot(ray.dir, hit.normal) < 0.0f) // out -> in
 				{
 					eta = hit.obj->ior;
 					normal = hit.normal;
 				}
-				else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
+				else // in -> out
 				{
 					eta = 1.0f / hit.obj->ior;
 					normal = -hit.normal;
@@ -262,10 +264,6 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 				if (hit.obj->reflection)
 				{
-					// 여기에 반사 구현
-					// 수치 오류 주의
-					// 반사광이 반환해준 색을 더할 때의 비율은 hit.obj->reflection
-
 					const glm::vec3 reflectionM = ray.dir + hit.normal * glm::dot(hit.normal, -ray.dir);
 					const glm::vec3 reflectedDirection = glm::normalize(2.0f * reflectionM - ray.dir);
 					Ray reflection_ray{ hit.point + 1e-4f * reflectedDirection, reflectedDirection };
@@ -274,18 +272,17 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 
 				if (hit.obj->transparency) // for balls
 				{
-					// 투명한 물체의 굴절 처리
-					const float ior = 1.5f; // Index of refraction (유리: 1.5, 물: 1.3)
+					const float ior = 1.5f; // Index of refraction (Glass)
 
 					float eta; // sinTheta1 / sinTheta2
 					glm::vec3 normal;
 
-					if (glm::dot(ray.dir, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
+					if (glm::dot(ray.dir, hit.normal) < 0.0f) // out -> in
 					{
 						eta = ior;
 						normal = hit.normal;
 					}
-					else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
+					else // in -> out
 					{
 						eta = 1.0f / ior;
 						normal = -hit.normal;
@@ -332,12 +329,12 @@ glm::vec3 Raytracer::traceRay(Ray& ray, const int recurseLevel)
 				float eta; // sinTheta1 / sinTheta2
 				glm::vec3 normal;
 
-				if (glm::dot(ray.dir, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
+				if (glm::dot(ray.dir, hit.normal) < 0.0f) // out -> in
 				{
 					eta = hit.obj->ior;
 					normal = hit.normal;
 				}
-				else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
+				else // in -> out
 				{
 					eta = 1.0f / hit.obj->ior;
 					normal = -hit.normal;
@@ -413,16 +410,56 @@ void Raytracer::Render(std::vector<glm::vec4>& pixels)
 {
 	std::fill(pixels.begin(), pixels.end(), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	const glm::vec3 eyePos(0.0f, 0.0f, -1.5f); // eyePos(0.0f, 0.0f, -1.5f);
+	const int samplesPerPixel = 8;
 
 #pragma omp parallel for
-	for (int j = 0; j < height; j++)
-		for (int i = 0; i < width; i++)
-		{
-			const glm::vec3 pixelPosWorld = TransformScreenToWorld(glm::vec2(i, j));
-			Ray pixelRay{ pixelPosWorld, glm::normalize(pixelPosWorld - eyePos) };   
-			pixels[i + width * j] = glm::vec4(glm::clamp(traceRay(pixelRay, 5), 0.0f, 1.0f), 1.0f);
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			glm::vec3 pixelColor(0.0f);
+
+			for (int s = 0; s < samplesPerPixel; s++) {
+				float offsetX = RandomFloat() - 0.5f;
+				float offsetY = RandomFloat() - 0.5f;
+
+				glm::vec2 screenPos(i + offsetX, j + offsetY);
+				glm::vec3 pixelPosWorld = TransformScreenToWorld(screenPos);
+
+				Ray pixelRay;
+
+				if (defocusAngle <= 0)
+				{
+					pixelRay.start = cameraCenter;
+					pixelRay.dir = glm::normalize(pixelPosWorld - cameraCenter);
+				}
+				else
+				{
+					pixelRay.start = DefocusDiskSample();
+
+					glm::vec3 rayDirection = glm::normalize(pixelPosWorld - cameraCenter);
+					glm::vec3 focalPoint = cameraCenter + rayDirection * focusDist;
+
+					pixelRay.dir = glm::normalize(focalPoint - pixelRay.start);
+				}
+
+				pixelColor += traceRay(pixelRay, 5);
+			}
+
+			pixelColor /= static_cast<float>(samplesPerPixel);
+
+			pixels[i + width * j] = glm::vec4(glm::clamp(pixelColor, 0.0f, 1.0f), 1.0f);
 		}
+	}
+
+//	const glm::vec3 eyePos(0.0f, 0.0f, -1.5f); // eyePos(0.0f, 0.0f, -1.5f);
+//	
+//#pragma omp parallel for
+//	for (int j = 0; j < height; j++)
+//		for (int i = 0; i < width; i++)
+//		{
+//			const glm::vec3 pixelPosWorld = TransformScreenToWorld(glm::vec2(i, j));
+//			Ray pixelRay{ pixelPosWorld, glm::normalize(pixelPosWorld - eyePos) };   
+//			pixels[i + width * j] = glm::vec4(glm::clamp(traceRay(pixelRay, 5), 0.0f, 1.0f), 1.0f);
+//		}
 }
 
 glm::vec3 Raytracer::TransformScreenToWorld(glm::vec2 posScreen)
@@ -431,7 +468,6 @@ glm::vec3 Raytracer::TransformScreenToWorld(glm::vec2 posScreen)
 	const float yScale = 2.0f / this->height;
 	const float aspect = float(this->width) / this->height;
 
-	// 3차원 공간으로 확장 (z좌표는 0.0)
 	return glm::vec3((posScreen.x * xScale - 1.0f) * aspect, -posScreen.y * yScale + 1.0f, 0.0f);
 }
 
@@ -464,4 +500,47 @@ float Raytracer::calculateFresnel(const glm::vec3& incident, const glm::vec3& no
 
 		return kr;
 	}
+}
+
+// DoF
+float Raytracer::RandomFloat() const 
+{
+	return static_cast<float>(rand()) / RAND_MAX;
+}
+
+float Raytracer::RandomFloat(float min, float max) const
+{
+	return min + (max - min) * RandomFloat();
+}
+
+glm::vec3 Raytracer::RandomInUnitDisk() const  // make random dots on disk
+{
+	while (true) 
+	{
+		glm::vec3 p(RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f), 0.0f);
+		if (glm::dot(p, p) < 1.0f) return p;
+	}
+}
+
+glm::vec3 Raytracer::DefocusDiskSample() const  // make random sample on defocus disk
+{
+	glm::vec3 p = RandomInUnitDisk();
+	return cameraCenter + (p.x * defocusDisk_u) + (p.y * defocusDisk_v);
+}
+
+void Raytracer::InitializeCamera() 
+{
+	cameraCenter = glm::vec3(0.0f, 0.0f, -1.5f);
+
+	glm::vec3 lookfrom = cameraCenter;
+	glm::vec3 lookat = glm::vec3(0.0f, 0.15f, 1.5f);
+	glm::vec3 vup = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	w = glm::normalize(lookfrom - lookat);
+	u = glm::normalize(glm::cross(vup, w));
+	v = glm::cross(w, u);
+
+	float defocusRadius = focusDist * tan(glm::radians(defocusAngle / 2.0f));
+	defocusDisk_u = u * defocusRadius;
+	defocusDisk_v = v * defocusRadius;
 }

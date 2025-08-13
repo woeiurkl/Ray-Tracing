@@ -29,7 +29,7 @@ public:
 		const glm::vec3& c01,
 		const glm::vec3& c11);
 
-	glm::vec3 SamplePoint(const glm::vec2& uv); // Nearest sampling이라고 부르기도 함
+	glm::vec3 SamplePoint(const glm::vec2& uv); // Nearest sampling
 
 
 	glm::vec3 SampleLinear(const glm::vec2& uv);

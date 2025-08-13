@@ -6,7 +6,7 @@ class Triangle : public Object
 {
 public:
     glm::vec3 v0, v1, v2;
-    glm::vec2 uv0, uv1, uv2; // 뒤에서 텍스춰 좌표계로 사용
+    glm::vec2 uv0, uv1, uv2;
 
 public:
     Triangle()
@@ -21,7 +21,7 @@ public:
 
     virtual Hit CheckRayCollision(Ray& ray);
 
-    // 참고: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
     bool IntersectRayTriangle(const glm::vec3& orig, const glm::vec3& dir,
         const glm::vec3& v0, const glm::vec3& v1,
         const glm::vec3& v2, glm::vec3& point, glm::vec3& faceNormal,

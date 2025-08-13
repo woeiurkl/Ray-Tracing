@@ -42,7 +42,7 @@ public:
 	UINT indexCount;
 
 public:
-	Example(HWND window, int width, int height); // 컴퓨터가 느릴 경우 raytracer(width/4, height/4) 같이 해상도 조절 가능
+	Example(HWND window, int width, int height);
 
 	void Update();
 

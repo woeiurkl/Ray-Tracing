@@ -17,11 +17,18 @@ public:
 	Light light;
 	std::vector<std::shared_ptr<Object>> objects;
 
+	// DoF
+	float defocusAngle = 0.0f;
+	float focusDist = 3.0f;
+	glm::vec3 defocusDisk_u;
+	glm::vec3 defocusDisk_v;
+	glm::vec3 cameraCenter;
+	glm::vec3 u, v, w;
+
 	Raytracer(const int& width, const int& height);
 
 	Hit FindClosestCollision(Ray& ray);
 
-	// 광선이 물체에 닿으면 그 물체의 색 반환
 	glm::vec3 traceRay(Ray& ray, const int recurseLevel);
 
 	void Render(std::vector<glm::vec4>& pixels);
@@ -29,4 +36,11 @@ public:
 	glm::vec3 TransformScreenToWorld(glm::vec2 posScreen);
 
 	float calculateFresnel(const glm::vec3& incident, const glm::vec3& normal, float ior);
+
+	// DoF
+	void InitializeCamera();
+	float RandomFloat() const;
+	float RandomFloat(float min, float max) const;
+	glm::vec3 RandomInUnitDisk() const;
+	glm::vec3 DefocusDiskSample() const;
 };

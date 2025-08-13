@@ -30,11 +30,11 @@ Texture::Texture(const int& width, const int& height, const std::vector<glm::vec
 
 glm::vec3 Texture::GetWrapped(int i, int j)
 {
-	i %= width; // i가 width면 0으로 바뀜
+	i %= width;
 	j %= height;
 
 	if (i < 0)
-		i += width; // i가 -1이면 (width-1)로 바뀜
+		i += width;
 	if (j < 0)
 		j += height;
 
@@ -58,10 +58,10 @@ glm::vec3 Texture::InterpolateBilinear(
 	return a * (1.0f - dy) + b * dy;
 }
 
-glm::vec3 Texture::SamplePoint(const glm::vec2& uv) // Nearest sampling이라고 부르기도 함
+glm::vec3 Texture::SamplePoint(const glm::vec2& uv) // Nearest sampling
 {
-	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
-	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
+	// uv [0.0, 1.0] x [0.0, 1.0]
+	// xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 	glm::vec2 xy = uv * glm::vec2(width, height) - glm::vec2(0.5f);
 	xy += glm::vec2(0.5f);
 
@@ -73,9 +73,8 @@ glm::vec3 Texture::SamplePoint(const glm::vec2& uv) // Nearest sampling이라고
 
 glm::vec3 Texture::SampleLinear(const glm::vec2& uv)
 {
-	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
-	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
-	// std::cout << floor(-0.3f) << " " << int(-0.3f) << std::endl; // -1 0
+	// uv [0.0, 1.0] x [0.0, 1.0]
+	// xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 
 	const glm::vec2 xy = uv * glm::vec2(width, height) - glm::vec2(0.5f);
 	const int i = int(floor(xy.x));

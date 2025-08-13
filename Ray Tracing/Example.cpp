@@ -1,7 +1,7 @@
 ﻿#include "Example.h"
 
 Example::Example(HWND window, int width, int height)
-	: raytracer(width, height) // 컴퓨터가 느릴 경우 raytracer(width/4, height/4) 같이 해상도 조절 가능
+	: raytracer(width, height)
 {
 	Initialize(window, width, height);
 }
@@ -9,7 +9,7 @@ Example::Example(HWND window, int width, int height)
 void Example::Update()
 {
 	static int count = 0;
-	if (count == 0) // 한 번만 렌더링
+	if (count == 0)
 	{
 		pixels.resize(raytracer.width * raytracer.height);
 

@@ -33,7 +33,6 @@ int main()
 
 	RegisterClassEx(&wc);
 
-	// 실제로 그려지는 해상도를 설정하기 위해
 	RECT wr = { 0, 0, width, height };				   // set the size, but not the position
 	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE); // adjust the size
 
@@ -41,10 +40,10 @@ int main()
 		wc.lpszClassName,
 		L"Ray Tracing",
 		WS_OVERLAPPEDWINDOW,
-		100,				// 윈도우 좌측 상단의 x 좌표
-		100,				// 윈도우 좌측 상단의 y 좌표
-		wr.right - wr.left, // 윈도우 가로 방향 해상도
-		wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+		100,				
+		100,				
+		wr.right - wr.left, 
+		wr.bottom - wr.top,
 		NULL,
 		NULL,
 		wc.hInstance,
